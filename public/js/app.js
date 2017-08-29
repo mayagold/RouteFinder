@@ -18,17 +18,28 @@ app.controller('routeController', ['$http', '$scope', function($http, $scope){
   this.routes = [];
   this.loggedIn = false;
   this.currentUser = '';
-  this.login = function(){
-    this.loggedIn = true;
-  }
+  this.commentsView = false; //switching will make comments appear
 
   // WORKING ON LIKE ROUTE
-  this.likeRoute = function(){
+  this.likeRoute = function(route){
     console.log("like button clicked");
+    $http({
+      method: 'PUT',
+      url: '/routes/' + route._id
+    }).then(
+      function(response){
+        route.likes += 1;
+        console.log(route.likes, " number of likes");
+        // controller.getRoutes();
+      }
+    ), function(error){
+        console.log(error);
+      }
   }
 
   // WORKING ON VIEWING COMMENTS
   this.viewComments = function(){
+    this.commentsView = !this.commentsView;
     console.log("Comments tag clicked");
   }
 
@@ -37,25 +48,28 @@ app.controller('routeController', ['$http', '$scope', function($http, $scope){
     console.log("User is adding a comment");
   }
 
-  // WHAT DOES THIS DO
+  // SETS CURRENT USER UPON REGISTRATION
   this.checkRegister = function(username, password){
-      $http({
-        method: 'POST',
-        url: '/session/registration',
-        data: {
-          username: this.registeredUsername,
-          password: this.registeredPassword
-        }
-      }).then(
-        function(response){
-          controller.login();
-        },
-        function(error){
-        }
-      );
+    $http({
+      method: 'POST',
+      url: '/session/registration',
+      data: {
+        username: this.registeredUsername,
+        password: this.registeredPassword
+      }
+    }).then(
+      function(response){
+        controller.loggedIn = true;
+        controller.currentUser = response.config.data.username;
+        // console.log(controller.loggedIn, " should be true");
+        // console.log(controller.currentUser, " should say current user");
+      },
+      function(error){
+        console.log(error);
+      }
+    );
   }
-
-  // HOW IS THIS DIFFERENT THAN ABOVE
+  // SET CURRENT USER WHEN LOGGING IN
   this.checkAuth = function(){
       $http({
         method: 'POST',
@@ -64,9 +78,9 @@ app.controller('routeController', ['$http', '$scope', function($http, $scope){
           username: this.loggedUsername,
           password: this.loggedPassword
         }
-      }).then(
-        function(response){
+      }).then( function(response){
           // console.log(response.config.data);
+          controller.loggedIn = true;
           controller.currentUser = response.config.data.username;
           // console.log(controller.currentUser);
         },
@@ -74,6 +88,15 @@ app.controller('routeController', ['$http', '$scope', function($http, $scope){
           console.log(error);
         }
       );
+  }
+  // LOGOUT
+  this.logout = function() {        // still need to add ng-click
+    $http({
+      method: 'GET',
+      url: '/session/logout'
+    }).then(function(response){
+      controller.loggedIn = false;
+    })
   }
   /////////////////////////////////////////////////////
   //     CRUD

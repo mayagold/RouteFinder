@@ -74,7 +74,7 @@
       <ul ng-repeat="route in ctrl.routes  | filter:searchBox" ng-init="limit = 28">
         <li >
             <h4 ng-click="ctrl.showRoute(route);">{{route.description}}</h4>
-            <p><span id="likes" ng-click="ctrl.likeRoute();">Like</span> ({{route.likes}})</p>
+            <p><span id="likes" ng-click="ctrl.likeRoute(route);">Like</span> ({{route.likes}})</p>
             <p>{{route.details | limitTo: limit}}<a href="#" ng-click="limit=route.details.length">  ...see more</a></p>
             <button ng-if="ctrl.loggedUsername==='admin' && ctrl.loggedPassword==='admin' && req.session.logged===true"  ng-click="ctrl.deleteRoute(route);" type="button" class="btn-sm btn-danger">Delete
             </button>
