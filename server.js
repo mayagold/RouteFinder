@@ -6,7 +6,7 @@ const express     = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
 const mongoose    = require('mongoose');
-const session        = require('express-session');
+const session     = require('express-session');
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
@@ -38,16 +38,9 @@ app.use('/routes', routeController);
 //    REQUIRE SEESSION CONTROLLER
 ////////////////////////////////////////////////
 
-const sessionController = require('./controllers/session.js');
+const sessionController = require('./controllers/sessionsController.js');
 app.use('/session', sessionController);
 
-////////////////////////////////////////////////
-//    HELLO WORLD
-////////////////////////////////////////////////
-
-// app.get('/', function(req,res){
-//   res.send('Working!');
-// })
 
 ////////////////////////////////////////////////
 //    MONGO DB
@@ -63,7 +56,7 @@ mongoose.connection.once('open', function() {
 //    Listening
 ////////////////////////////////////////////////
 
-app.listen(port, function(){
+app.listen(3000, function(){
   console.log('-----------------------');
   console.log('Listening on port ' + port);
   console.log('-----------------------');
